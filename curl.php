@@ -253,6 +253,7 @@ class Curl {
 	public function execute($url = null, $options = array(), $type = 'GET', $ssl = false) {
 		$this->info = array();
 		$this->lastError = null;
+		$this->url = $url;
 
 		foreach ($options as $key => $val) {
 			$method = 'set' . str_replace(" ", "", ucwords(str_replace("_", " ", $key)));
@@ -263,12 +264,7 @@ class Curl {
 			$this->setRequestType($type);
 		}
 
-		$_url = $this->url;
-		if (!is_null($url) && $url != $this->url) {
-			$_url = $url;
-		}
-
-		curl_setopt($this->ch, CURLOPT_URL, $_url);
+		curl_setopt($this->ch, CURLOPT_URL, $this->url);
 		// always include header in response
 		curl_setopt($this->ch, CURLOPT_HEADER, true);
 		// response as string instead of outputting (which is curl's default)
