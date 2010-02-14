@@ -146,6 +146,13 @@ class Curl {
 	 */
 	public $response = null;
 	/**
+	 * undocumented variable
+	 *
+	 * @var bool
+	 * @access public
+	 */
+	public $returnHeader = null;
+	/**
 	 * Current `CURLOPT_SSL_VERIFYHOST`
 	 *
 	 * @var bool
@@ -265,10 +272,12 @@ class Curl {
 		}
 
 		curl_setopt($this->ch, CURLOPT_URL, $this->url);
-		// always include header in response
-		curl_setopt($this->ch, CURLOPT_HEADER, true);
 		// response as string instead of outputting (which is curl's default)
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+
+		if (is_null($this->returnHeader)) {
+			$this->setReturnHeader(true);
+		}
 
 		$this->setSslVerify($ssl);
 
@@ -579,6 +588,23 @@ class Curl {
 			}
 			if (curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $type)) {
 				$this->requestType = $type;
+				return true;
+			}
+			return false;
+		}
+		return true;
+	}
+	/**
+	 * Set `CURLOPT_HEADER`, to include or not the HTTP headers in the response
+	 *
+	 * @param bool $bool
+	 * @return bool
+	 * @access public
+	 */
+	public function setReturnHeader($bool) {
+		if ($this->returnHeader != $bool) {
+			if (curl_setopt($this->ch, CURLOPT_HEADER, $bool)) {
+				$this->returnHeader = $bool;
 				return true;
 			}
 			return false;
