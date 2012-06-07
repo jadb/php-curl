@@ -602,7 +602,7 @@ class Curl {
 	 * @access public
 	 */
 	public function setReturnHeader($bool) {
-		if ($this->returnHeader != $bool) {
+		if ($this->returnHeader !== $bool) {
 			if (curl_setopt($this->ch, CURLOPT_HEADER, $bool)) {
 				$this->returnHeader = $bool;
 				return true;
